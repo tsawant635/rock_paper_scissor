@@ -1,0 +1,55 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .topBar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+  }
+  
+  .playerInfo {
+    margin: 10px 0;
+  }
+  
+  .select {
+    padding: 10px;
+    margin: 10px;
+    width: 100%;
+    max-width: 200px;
+    box-sizing: border-box;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    margin: 20px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #005bb5;
+  }
+  
+  @media (max-width: 600px) {
+    .topBar {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .select {
+      width: 100%;
+    }
+  }
+  
