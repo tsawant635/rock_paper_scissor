@@ -11,6 +11,11 @@ const StartScreen = () => {
   const [player2, setLocalPlayer2] = useState('');
   const [rounds, setLocalRounds] = useState(null);
 
+  useEffect(() => {
+    resetGame();
+  }, [resetGame]);
+
+
   const startGame = () => {
     setMode(mode);
     setPlayer1(player1);

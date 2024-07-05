@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import useStore from '../lib/store';
+import Modal from './Modal';
 import styles from './GameScreen.module.css';
 
 const GameScreen = () => {
@@ -16,10 +17,13 @@ const GameScreen = () => {
     incrementPlayer1Score,
     incrementPlayer2Score,
     updateLeaderboard,
+    resetGame,
   } = useStore();
   const router = useRouter();
   const [player1Choice, setPlayer1Choice] = useState('');
   const [player2Choice, setPlayer2Choice] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [winner, setWinner] = useState('');
 
   const playRound = () => {
     const choices = ['rock', 'paper', 'scissors'];
@@ -40,12 +44,28 @@ const GameScreen = () => {
     }
 
     if (currentRound === rounds) {
-      const winner = player1Score > player2Score ? player1 : player2;
-      updateLeaderboard(winner, player1Score > player2Score ? player1Score : player2Score);
-      router.push('/leaderboard');
+      const winnerName = player1Score > player2Score ? player1 : player2;
+      setWinner(winnerName);
+      updateLeaderboard(winnerName, player1Score > player2Score ? player1Score : player2Score);
+      setShowModal(true);
     } else {
       incrementRound();
     }
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    router.push('/');
+  };
+
+  const handleNavigateToLeaderboard = () => {
+    setShowModal(false);
+    router.push('/leaderboard');
+  };
+
+  const handleResetGame = () => {
+    resetGame();
+    router.push('/');
   };
 
   return (
@@ -54,6 +74,9 @@ const GameScreen = () => {
         <h2>Round {currentRound} of {rounds}</h2>
         <button className={styles.button} onClick={() => router.push('/leaderboard')}>
           Leaderboard
+        </button>
+        <button className={styles.button} onClick={handleResetGame}>
+          Reset
         </button>
       </div>
       <h3>{player1} vs {player2}</h3>
@@ -76,6 +99,12 @@ const GameScreen = () => {
         )}
         <button className={styles.button} onClick={playRound}>Play Round</button>
       </div>
+      <Modal
+        show={showModal}
+        winner={winner}
+        onClose={handleCloseModal}
+        onNavigate={handleNavigateToLeaderboard}
+      />
     </div>
   );
 };
