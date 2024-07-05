@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { useRouter } from 'next/router';
 import useStore from '../lib/store';
 import styles from './StartScreen.module.css';
