@@ -1,65 +1,89 @@
 .container {
-    display: flex;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  background: url('/dottedbg.png') no-repeat center center;
+  background-size: cover;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  margin-bottom: 20px; /* Added margin for separation */
+}
+
+.button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #005bb5;
+}
+
+.playerInfo {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.choices {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.choiceButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.choiceImage {
+  width: 50px;
+  height: 50px;
+}
+
+.selectedChoices {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Added margin for separation */
+}
+
+.choiceDisplay {
+  text-align: center;
+  margin: 0 20px;
+}
+
+@media (max-width: 600px) {
+  .topBar {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: url('/dottedbg.png') no-repeat center center;
-    background-size: cover;
-    padding: 20px;
-    box-sizing: border-box;
   }
-  
-  .topBar {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 5px;
-  }
-  
+
   .button {
-    padding: 10px 20px;
-    margin: 10px;
-    background-color: #0070f3;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    width: 100%;
+    margin: 5px 0;
   }
-  
-  .button:hover {
-    background-color: #005bb5;
+
+  .choices {
+    flex-direction: column;
   }
-  
-  .playerInfo {
+
+  .choiceButton {
     margin: 10px 0;
-    font-size: 16px;
   }
-  
-  .select {
-    padding: 8px;
-    margin: 10px;
-    font-size: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  @media (max-width: 600px) {
-    .topBar {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .button {
-      width: 100%;
-      margin: 5px 0;
-    }
-  
-    .select {
-      width: 100%;
-      margin: 5px 0;
-    }
-  }
-  
+}

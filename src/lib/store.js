@@ -92,6 +92,11 @@ const useStore = create((set) => ({
     saveGameState(newState);
     return newState;
   }),
+  resetLeaderboard: () => set((state) => { // Add this function to reset leaderboard
+    const newState = { ...state, leaderboard: [] };
+    saveGameState(newState);
+    return newState;
+  }),
 }));
 
 export default useStore;

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import useStore from '../lib/store';
-import Modal from './Modal';
-import styles from './GameScreen.module.css';
+'use-client';
+import { useState } from "react";
+import { useRouter } from "next/router";
+import useStore from "../lib/store";
+import Modal from "./Modal";
+import styles from "./GameScreen.module.css";
 
 const GameScreen = () => {
   const {
@@ -20,23 +21,39 @@ const GameScreen = () => {
     resetGame,
   } = useStore();
   const router = useRouter();
-  const [player1Choice, setPlayer1Choice] = useState('');
-  const [player2Choice, setPlayer2Choice] = useState('');
+  const [player1Choice, setPlayer1Choice] = useState("");
+  const [player2Choice, setPlayer2Choice] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [winner, setWinner] = useState('');
+  const [winner, setWinner] = useState("");
+  const [draws, setDraws] = useState(0);
 
-  const playRound = () => {
-    const choices = ['rock', 'paper', 'scissors'];
-    if (mode === 'computer') {
-      setPlayer2Choice(choices[Math.floor(Math.random() * 3)]);
+  const Rock =
+    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.35_wf0hdh.png";
+  const Paper =
+    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
+  const Scissor =
+    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
+
+  const playRound = (choice) => {
+    const choices = ["rock", "paper", "scissors"];
+    setPlayer1Choice(choice);
+
+    if (mode === "computer") {
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
+      setPlayer2Choice(computerChoice);
     }
 
-    if (player1Choice === player2Choice) {
-      // Tie
+    const p2Choice =
+      mode === "computer"
+        ? player2Choice
+        : choices[Math.floor(Math.random() * 3)];
+
+    if (choice === p2Choice) {
+      setDraws(draws + 1);
     } else if (
-      (player1Choice === 'rock' && player2Choice === 'scissors') ||
-      (player1Choice === 'paper' && player2Choice === 'rock') ||
-      (player1Choice === 'scissors' && player2Choice === 'paper')
+      (choice === "rock" && p2Choice === "scissors") ||
+      (choice === "paper" && p2Choice === "rock") ||
+      (choice === "scissors" && p2Choice === "paper")
     ) {
       incrementPlayer1Score();
     } else {
@@ -46,7 +63,10 @@ const GameScreen = () => {
     if (currentRound === rounds) {
       const winnerName = player1Score > player2Score ? player1 : player2;
       setWinner(winnerName);
-      updateLeaderboard(winnerName, player1Score > player2Score ? player1Score : player2Score);
+      updateLeaderboard(
+        winnerName,
+        player1Score > player2Score ? player1Score : player2Score
+      );
       setShowModal(true);
     } else {
       incrementRound();
@@ -55,49 +75,123 @@ const GameScreen = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    router.push('/');
+    router.push("/");
   };
 
   const handleNavigateToLeaderboard = () => {
     setShowModal(false);
-    router.push('/leaderboard');
+    router.push("/leaderboard");
   };
 
   const handleResetGame = () => {
     resetGame();
-    router.push('/');
+    router.push("/");
+  };
+
+  const getImageSrc = (choice) => {
+    switch (choice) {
+      case "rock":
+        return Rock;
+      case "paper":
+        return Paper;
+      case "scissors":
+        return Scissor;
+      default:
+        return "";
+    }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
-        <h2>Round {currentRound} of {rounds}</h2>
-        <button className={styles.button} onClick={() => router.push('/leaderboard')}>
+        <h2>
+          Round {currentRound} of {rounds}
+        </h2>
+        <button
+          className={styles.button}
+          onClick={() => router.push("/leaderboard")}
+        >
           Leaderboard
         </button>
         <button className={styles.button} onClick={handleResetGame}>
           Reset
         </button>
       </div>
-      <h3>{player1} vs {player2}</h3>
-      <p className={styles.playerInfo}>{player1} Wins: {player1Score}</p>
-      <p className={styles.playerInfo}>{player2} Wins: {player2Score}</p>
-      <div>
-        <select className={styles.select} onChange={(e) => setPlayer1Choice(e.target.value)}>
-          <option value="">Select</option>
-          <option value="rock">Rock</option>
-          <option value="paper">Paper</option>
-          <option value="scissors">Scissors</option>
-        </select>
-        {mode === 'multiplayer' && (
-          <select className={styles.select} onChange={(e) => setPlayer2Choice(e.target.value)}>
-            <option value="">Select</option>
-            <option value="rock">Rock</option>
-            <option value="paper">Paper</option>
-            <option value="scissors">Scissors</option>
-          </select>
+      <h3>
+        {player1} vs {player2}
+      </h3>
+      <p className={styles.playerInfo}>
+        {player1} Wins: {player1Score}
+      </p>
+      <p className={styles.playerInfo}>
+        {player2} Wins: {player2Score}
+      </p>
+      <p className={styles.playerInfo}>
+        Draws: {draws}
+      </p>
+      <div className={styles.choices}>
+        <button
+          className={styles.choiceButton}
+          onClick={() => playRound("rock")}
+        >
+          <img src={Rock} alt="Rock" className={styles.choiceImage} />
+        </button>
+        <button
+          className={styles.choiceButton}
+          onClick={() => playRound("paper")}
+        >
+          <img src={Paper} alt="Paper" className={styles.choiceImage} />
+        </button>
+        <button
+          className={styles.choiceButton}
+          onClick={() => playRound("scissors")}
+        >
+          <img src={Scissor} alt="Scissors" className={styles.choiceImage} />
+        </button>
+      </div>
+      {mode === "multiplayer" && (
+        <div className={styles.choices}>
+          <button
+            className={styles.choiceButton}
+            onClick={() => setPlayer2Choice("rock")}
+          >
+            <img src={Rock} alt="Rock" className={styles.choiceImage} />
+          </button>
+          <button
+            className={styles.choiceButton}
+            onClick={() => setPlayer2Choice("paper")}
+          >
+            <img src={Paper} alt="Paper" className={styles.choiceImage} />
+          </button>
+          <button
+            className={styles.choiceButton}
+            onClick={() => setPlayer2Choice("scissors")}
+          >
+            <img src={Scissor} alt="Scissors" className={styles.choiceImage} />
+          </button>
+        </div>
+      )}
+      <div className={styles.selectedChoices}>
+        {player1Choice && (
+          <div className={styles.choiceDisplay}>
+            <h4>{player1}'s Choice</h4>
+            <img
+              src={getImageSrc(player1Choice)}
+              alt={player1Choice}
+              className={styles.choiceImage}
+            />
+          </div>
         )}
-        <button className={styles.button} onClick={playRound}>Play Round</button>
+        {player2Choice && (
+          <div className={styles.choiceDisplay}>
+            <h4>{player2}'s Choice</h4>
+            <img
+              src={getImageSrc(player2Choice)}
+              alt={player2Choice}
+              className={styles.choiceImage}
+            />
+          </div>
+        )}
       </div>
       <Modal
         show={showModal}

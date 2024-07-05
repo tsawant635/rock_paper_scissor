@@ -1,9 +1,15 @@
 import React from 'react';
+import { useRouter } from 'next/router';
 import useStore from '../lib/store';
 import styles from './Leaderboard.module.css';
 
 const Leaderboard = () => {
-  const { leaderboard } = useStore();
+  const router = useRouter();
+  const { leaderboard, resetLeaderboard } = useStore(); // Destructure resetLeaderboard from the store
+
+  const navigateToHome = () => {
+    router.push('/');
+  };
 
   return (
     <div className={styles.container}>
@@ -15,6 +21,12 @@ const Leaderboard = () => {
           </li>
         ))}
       </ul>
+      <button onClick={resetLeaderboard} className={styles.clearButton}>
+        Clear Leaderboard
+      </button>
+      <button onClick={navigateToHome} className={styles.homeButton}>
+        Home
+      </button>
     </div>
   );
 };

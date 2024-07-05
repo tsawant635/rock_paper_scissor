@@ -1,6 +1,7 @@
-/** @type {import('next').NextConfig} */
+import withImages from 'next-images';
+
 const nextConfig = {
   reactStrictMode: true,
 };
 
-export default nextConfig;
+export default withImages(nextConfig);
