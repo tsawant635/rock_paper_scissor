@@ -1,7 +1,14 @@
 import React from 'react';
 import styles from './Modal.module.css';
 
-const Modal = ({ show, winner, onClose, onNavigate }) => {
+interface ModalProps {
+  show: boolean;
+  winner: string;
+  onClose: () => void;
+  onNavigate: () => void;
+}
+
+const Modal: React.FC<ModalProps> = ({ show, winner, onClose, onNavigate }) => {
   if (!show) return null;
 
   return (

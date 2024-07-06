@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import useStore from "../lib/store";
@@ -9,7 +10,7 @@ const Rock = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Scre
 const Paper = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
 const Scissor = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
 
-const GameScreen = () => {
+const GameScreen: React.FC = () => {
   const {
     mode,
     player1,
@@ -25,13 +26,13 @@ const GameScreen = () => {
     resetGame,
   } = useStore();
   const router = useRouter();
-  const [player1Choice, setPlayer1Choice] = useState("");
-  const [player2Choice, setPlayer2Choice] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [winner, setWinner] = useState("");
-  const [draws, setDraws] = useState(0);
-  const [roundCompleted, setRoundCompleted] = useState(false);
-  const [choicesLocked, setChoicesLocked] = useState(false);
+  const [player1Choice, setPlayer1Choice] = useState<string>("");
+  const [player2Choice, setPlayer2Choice] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [winner, setWinner] = useState<string>("");
+  const [draws, setDraws] = useState<number>(0);
+  const [roundCompleted, setRoundCompleted] = useState<boolean>(false);
+  const [choicesLocked, setChoicesLocked] = useState<boolean>(false);
 
   useEffect(() => {
     if (player1Choice && player2Choice) {
@@ -66,7 +67,7 @@ const GameScreen = () => {
     setRoundCompleted(true);
   };
 
-  const determineWinner = (choice1, choice2) => {
+  const determineWinner = (choice1: string, choice2: string): string => {
     if (choice1 === choice2) {
       return "draw";
     } else if (
@@ -80,7 +81,7 @@ const GameScreen = () => {
     }
   };
 
-  const playRound = (choice, player) => {
+  const playRound = (choice: string, player: string) => {
     if (choicesLocked) return;
 
     const choices = ["rock", "paper", "scissors"];
@@ -117,7 +118,7 @@ const GameScreen = () => {
     setChoicesLocked(false);
   };
 
-  const getImageSrc = (choice) => {
+  const getImageSrc = (choice: string): string => {
     switch (choice) {
       case "rock":
         return Rock;

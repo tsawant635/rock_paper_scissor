@@ -1,31 +1,31 @@
-'use-client';
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import useStore from '../lib/store';
 import styles from './StartScreen.module.css';
 
-const StartScreen = () => {
+const StartScreen: React.FC = () => {
   const router = useRouter();
   const { setMode, setPlayer1, setPlayer2, setRounds, resetGame } = useStore();
-  const [mode, setLocalMode] = useState('multiplayer');
-  const [player1, setLocalPlayer1] = useState('');
-  const [player2, setLocalPlayer2] = useState('');
-  const [rounds, setLocalRounds] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [mode, setLocalMode] = useState<string>('multiplayer');
+  const [player1, setLocalPlayer1] = useState<string>('');
+  const [player2, setLocalPlayer2] = useState<string>('');
+  const [rounds, setLocalRounds] = useState<number | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     resetGame();
   }, [resetGame]);
 
-  const validate = () => {
-    const newErrors = {};
+  const validate = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
     if (!player1.trim()) {
       newErrors.player1 = 'Player 1 name is required';
     }
     if (mode === 'multiplayer' && !player2.trim()) {
       newErrors.player2 = 'Player 2 name is required';
     }
-    if (!rounds || rounds < 1 || rounds > 10) {
+    if (!rounds || rounds < 1 || rounds > 30) {
       newErrors.rounds = 'Number of rounds must be between 1 and 10';
     }
     setErrors(newErrors);
@@ -46,7 +46,7 @@ const StartScreen = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>Rock-Paper-Scissors</h1>
       <label className={styles.label}>
-      &nbsp; &nbsp;  Mode: &nbsp; &nbsp; &nbsp; &nbsp;
+        &nbsp; &nbsp; Mode: &nbsp; &nbsp; &nbsp; &nbsp;
         <select
           className={styles.select}
           value={mode}
@@ -73,11 +73,9 @@ const StartScreen = () => {
             value={player2}
             onChange={(e) => setLocalPlayer2(e.target.value)}
           />
-
         </label>
-        
       )}
-                {errors.player2 && <p className={styles.error}>{errors.player2}</p>}
+      {errors.player2 && <p className={styles.error}>{errors.player2}</p>}
       <label className={styles.label}>
         Number of Rounds:
         <input
@@ -88,7 +86,6 @@ const StartScreen = () => {
           min="1"
           max="30"
         />
-
       </label>
       {errors.rounds && <p className={styles.error}>{errors.rounds}</p>}
       <div className={styles.label}>

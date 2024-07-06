@@ -1,7 +1,8 @@
-import StartScreen from '../components/StartScreen';
+import StartScreen from "@/components/StartScreen";
+
 
 const Home = () => {
-  return <StartScreen />;
+  return <StartScreen/>
 };
 
 export default Home;
