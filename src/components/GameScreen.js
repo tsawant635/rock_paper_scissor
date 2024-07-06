@@ -1,16 +1,13 @@
-"use-client";
-import { useState } from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import useStore from "../lib/store";
 import Modal from "./Modal";
 import styles from "./GameScreen.module.css";
 
-const Rock =
-  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.35_wf0hdh.png";
-const Paper =
-  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
-const Scissor =
-  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
+const Rock = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.35_wf0hdh.png";
+const Paper = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
+const Scissor = "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
 
 const GameScreen = () => {
   const {
@@ -33,37 +30,17 @@ const GameScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [winner, setWinner] = useState("");
   const [draws, setDraws] = useState(0);
+  const [roundCompleted, setRoundCompleted] = useState(false);
+  const [choicesLocked, setChoicesLocked] = useState(false);
 
-  console.log("player1Score", player1Score);
-  console.log("player2Score", player2Score);
-
-  const determineWinner = (choice1, choice2) => {
-    if (choice1 === choice2) {
-      return "draw";
-    } else if (
-      (choice1 === "rock" && choice2 === "scissors") ||
-      (choice1 === "paper" && choice2 === "rock") ||
-      (choice1 === "scissors" && choice2 === "paper")
-    ) {
-      return "player1";
-    } else {
-      return "player2";
+  useEffect(() => {
+    if (player1Choice && player2Choice) {
+      determineWinnerAndProceed();
     }
-  };
+  }, [player1Choice, player2Choice]);
 
-  const playRound = (choice) => {
-    const choices = ["rock", "paper", "scissors"];
-    setPlayer1Choice(choice);
-
-    let p2Choice;
-    if (mode === "computer") {
-      p2Choice = choices[Math.floor(Math.random() * 3)];
-      setPlayer2Choice(p2Choice);
-    } else {
-      p2Choice = player2Choice;
-    }
-
-    const roundWinner = determineWinner(choice, p2Choice);
+  const determineWinnerAndProceed = () => {
+    const roundWinner = determineWinner(player1Choice, player2Choice);
 
     if (roundWinner === "draw") {
       setDraws(draws + 1);
@@ -84,6 +61,38 @@ const GameScreen = () => {
     } else {
       incrementRound();
     }
+
+    setChoicesLocked(true);
+    setRoundCompleted(true);
+  };
+
+  const determineWinner = (choice1, choice2) => {
+    if (choice1 === choice2) {
+      return "draw";
+    } else if (
+      (choice1 === "rock" && choice2 === "scissors") ||
+      (choice1 === "paper" && choice2 === "rock") ||
+      (choice1 === "scissors" && choice2 === "paper")
+    ) {
+      return "player1";
+    } else {
+      return "player2";
+    }
+  };
+
+  const playRound = (choice, player) => {
+    if (choicesLocked) return;
+
+    const choices = ["rock", "paper", "scissors"];
+    if (player === "player1") {
+      setPlayer1Choice(choice);
+      if (mode === "computer") {
+        const p2Choice = choices[Math.floor(Math.random() * 3)];
+        setPlayer2Choice(p2Choice);
+      }
+    } else if (player === "player2") {
+      setPlayer2Choice(choice);
+    }
   };
 
   const handleCloseModal = () => {
@@ -99,6 +108,13 @@ const GameScreen = () => {
   const handleResetGame = () => {
     resetGame();
     router.push("/");
+  };
+
+  const handleNextRound = () => {
+    setPlayer1Choice("");
+    setPlayer2Choice("");
+    setRoundCompleted(false);
+    setChoicesLocked(false);
   };
 
   const getImageSrc = (choice) => {
@@ -143,19 +159,22 @@ const GameScreen = () => {
       <div className={styles.choices}>
         <button
           className={styles.choiceButton}
-          onClick={() => playRound("rock")}
+          onClick={() => playRound("rock", "player1")}
+          disabled={choicesLocked}
         >
           <img src={Rock} alt="Rock" className={styles.choiceImage} />
         </button>
         <button
           className={styles.choiceButton}
-          onClick={() => playRound("paper")}
+          onClick={() => playRound("paper", "player1")}
+          disabled={choicesLocked}
         >
           <img src={Paper} alt="Paper" className={styles.choiceImage} />
         </button>
         <button
           className={styles.choiceButton}
-          onClick={() => playRound("scissors")}
+          onClick={() => playRound("scissors", "player1")}
+          disabled={choicesLocked}
         >
           <img src={Scissor} alt="Scissors" className={styles.choiceImage} />
         </button>
@@ -164,19 +183,22 @@ const GameScreen = () => {
         <div className={styles.choices}>
           <button
             className={styles.choiceButton}
-            onClick={() => setPlayer2Choice("rock")}
+            onClick={() => playRound("rock", "player2")}
+            disabled={choicesLocked}
           >
             <img src={Rock} alt="Rock" className={styles.choiceImage} />
           </button>
           <button
             className={styles.choiceButton}
-            onClick={() => setPlayer2Choice("paper")}
+            onClick={() => playRound("paper", "player2")}
+            disabled={choicesLocked}
           >
             <img src={Paper} alt="Paper" className={styles.choiceImage} />
           </button>
           <button
             className={styles.choiceButton}
-            onClick={() => setPlayer2Choice("scissors")}
+            onClick={() => playRound("scissors", "player2")}
+            disabled={choicesLocked}
           >
             <img src={Scissor} alt="Scissors" className={styles.choiceImage} />
           </button>
@@ -204,6 +226,11 @@ const GameScreen = () => {
           </div>
         )}
       </div>
+      {roundCompleted && (
+        <button className={styles.button} onClick={handleNextRound}>
+          Next Round
+        </button>
+      )}
       <Modal
         show={showModal}
         winner={winner}
