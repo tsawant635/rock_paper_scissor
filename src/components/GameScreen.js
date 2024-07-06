@@ -1,9 +1,16 @@
-'use-client';
+"use-client";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import useStore from "../lib/store";
 import Modal from "./Modal";
 import styles from "./GameScreen.module.css";
+
+const Rock =
+  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.35_wf0hdh.png";
+const Paper =
+  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
+const Scissor =
+  "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
 
 const GameScreen = () => {
   const {
@@ -27,34 +34,40 @@ const GameScreen = () => {
   const [winner, setWinner] = useState("");
   const [draws, setDraws] = useState(0);
 
-  const Rock =
-    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.35_wf0hdh.png";
-  const Paper =
-    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.44_x9mhyj.png";
-  const Scissor =
-    "https://res.cloudinary.com/dkjn33zdf/image/upload/v1720157097/Screenshot_2024-07-05_at_08.49.40_pagmsh.png";
+  console.log("player1Score", player1Score);
+  console.log("player2Score", player2Score);
+
+  const determineWinner = (choice1, choice2) => {
+    if (choice1 === choice2) {
+      return "draw";
+    } else if (
+      (choice1 === "rock" && choice2 === "scissors") ||
+      (choice1 === "paper" && choice2 === "rock") ||
+      (choice1 === "scissors" && choice2 === "paper")
+    ) {
+      return "player1";
+    } else {
+      return "player2";
+    }
+  };
 
   const playRound = (choice) => {
     const choices = ["rock", "paper", "scissors"];
     setPlayer1Choice(choice);
 
+    let p2Choice;
     if (mode === "computer") {
-      const computerChoice = choices[Math.floor(Math.random() * 3)];
-      setPlayer2Choice(computerChoice);
+      p2Choice = choices[Math.floor(Math.random() * 3)];
+      setPlayer2Choice(p2Choice);
+    } else {
+      p2Choice = player2Choice;
     }
 
-    const p2Choice =
-      mode === "computer"
-        ? player2Choice
-        : choices[Math.floor(Math.random() * 3)];
+    const roundWinner = determineWinner(choice, p2Choice);
 
-    if (choice === p2Choice) {
+    if (roundWinner === "draw") {
       setDraws(draws + 1);
-    } else if (
-      (choice === "rock" && p2Choice === "scissors") ||
-      (choice === "paper" && p2Choice === "rock") ||
-      (choice === "scissors" && p2Choice === "paper")
-    ) {
+    } else if (roundWinner === "player1") {
       incrementPlayer1Score();
     } else {
       incrementPlayer2Score();
@@ -126,9 +139,7 @@ const GameScreen = () => {
       <p className={styles.playerInfo}>
         {player2} Wins: {player2Score}
       </p>
-      <p className={styles.playerInfo}>
-        Draws: {draws}
-      </p>
+      <p className={styles.playerInfo}>Draws: {draws}</p>
       <div className={styles.choices}>
         <button
           className={styles.choiceButton}
