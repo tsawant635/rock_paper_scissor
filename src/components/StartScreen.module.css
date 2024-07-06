@@ -20,14 +20,14 @@
   justify-content: center;
   gap: 10px;
   width: 100%;
-  max-width: 300px; /* Adjust as needed */
+  max-width: 300px; 
 }
 
 .input,
 .select {
   padding: 10px;
   width: 100%;
-  max-width: 200px; /* Adjust input width as needed */
+  max-width: 200px; 
   box-sizing: border-box;
 }
 

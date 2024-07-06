@@ -13,11 +13,16 @@
 .topBar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
-  margin-bottom: 20px; /* Added margin for separation */
+  margin-bottom: 20px; 
+}
+
+.playersName{
+  font-size: 36px;
 }
 
 .button {
@@ -60,7 +65,7 @@
 .selectedChoices {
   display: flex;
   justify-content: center;
-  margin-top: 20px; /* Added margin for separation */
+  margin-top: 20px; 
 }
 
 .choiceDisplay {

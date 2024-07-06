@@ -147,7 +147,7 @@ const GameScreen: React.FC = () => {
           Reset
         </button>
       </div>
-      <h3>
+      <h3 className={styles.playersName}>
         {player1} vs {player2}
       </h3>
       <p className={styles.playerInfo}>
@@ -158,6 +158,7 @@ const GameScreen: React.FC = () => {
       </p>
       <p className={styles.playerInfo}>Draws: {draws}</p>
       <div className={styles.choices}>
+   <p style={{fontSize:"22px"}}>   {player1} :- </p>
         <button
           className={styles.choiceButton}
           onClick={() => playRound("rock", "player1")}
@@ -182,6 +183,7 @@ const GameScreen: React.FC = () => {
       </div>
       {mode === "multiplayer" && (
         <div className={styles.choices}>
+             <p style={{fontSize:"22px"}}>   {player2} :- </p>
           <button
             className={styles.choiceButton}
             onClick={() => playRound("rock", "player2")}
